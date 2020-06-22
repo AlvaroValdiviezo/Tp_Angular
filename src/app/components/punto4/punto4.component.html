@@ -1,0 +1,34 @@
+<form class="card">
+    <div class="card-head alert alert-secondary ">
+        <div class="row form-group justify-content-around align-items-center">
+        <label for="para" class="col-2 text-center">Vidas: {{cantVidas}}</label>
+        <button type="button" class="btn btn-outline-success col-4 col-md-3" (click)="iniciar()">REINICIAR</button>
+        <label for="para" class="col-2 text-center">Puntaje: {{cantPuntaje}}/10</label>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-7">
+            <img [src]="'/assets/image/'+listaPalabras[ind].img" class="card-img" alt="xdxd" style="height: 340px;">
+        </div>
+    </div>
+    <br>
+    <div class="row justify-content-center">
+        <input type="text" name="letra" maxlength="1" class="col-1"  *ngIf="tamPalabra >= 1" [(ngModel)]=letras[0] (ngModelChange)="comparar(0)">
+        <input type="text" name="letra" maxlength="1" class="col-1"  *ngIf="tamPalabra >= 2" [(ngModel)]=letras[1] (ngModelChange)="comparar(1)">
+        <input type="text" name="letra" maxlength="1" class="col-1"  *ngIf="tamPalabra >= 3" [(ngModel)]=letras[2] (ngModelChange)="comparar(2)">
+        <input type="text" name="letra" maxlength="1" class="col-1"  *ngIf="tamPalabra >= 4" [(ngModel)]=letras[3] (ngModelChange)="comparar(3)">
+        <input type="text" name="letra" maxlength="1" class="col-1"  *ngIf="tamPalabra >= 5" [(ngModel)]=letras[4] (ngModelChange)="comparar(4)">
+        <input type="text" name="letra" maxlength="1" class="col-1"  *ngIf="tamPalabra >= 6" [(ngModel)]=letras[5] (ngModelChange)="comparar(5)">
+        <input type="text" name="letra" maxlength="1" class="col-1"  *ngIf="tamPalabra >= 7" [(ngModel)]=letras[6] (ngModelChange)="comparar(6)">
+        <input type="text" name="letra" maxlength="1" class="col-1"  *ngIf="tamPalabra >= 8" [(ngModel)]=letras[7] (ngModelChange)="comparar(7)">
+        <input type="text" name="letra" maxlength="1" class="col-1"  *ngIf="tamPalabra >= 9" [(ngModel)]=letras[8] (ngModelChange)="comparar(8)">
+    </div>
+    <br>
+    <div class="row justify-content-center">
+        <div class="card col-6 text-center">
+            <div class="card-body">
+                <h1 class="card-title text-capitalize">{{listaPalabras[ind].esp}}</h1>
+            </div>
+        </div>
+    </div>
+</form>

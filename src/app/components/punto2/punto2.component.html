@@ -1,0 +1,132 @@
+  <div class="row ">
+    <form class="col-md-8 align-content-center">
+        
+        <div class="form-group">
+            <label for="inputEmail">Email</label>
+            <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="Usuario" [(ngModel)]="asis.usuario">
+          </div>
+          <div class="form-group">
+            <label for="formInput">Nombre Organizacion</label>
+            <input type="text" class="form-control" id="formInput" placeholder="Nombre de la Organizacion" name="NombreOrg" [(ngModel)]="asis.nombreOrg">
+          </div>
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-md-5 col-sm-2 pt-0">Solicitar Constancia: </legend>
+            <div class=" col-md-7 col-sm-10">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="true" checked [(ngModel)]="asis.solicitarConst">
+                <label class="form-check-label" for="gridRadios1">
+                  Si
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="false" [(ngModel)]="asis.solicitarConst">
+                <label class="form-check-label" for="gridRadios2">
+                  No
+                </label>
+              </div>
+
+            </div>
+          </div>
+        </fieldset>
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <button type="button" class="btn btn-outline-secondary" (click)="agregarAsistencia()" >Registrar</button>
+          </div>
+        </div>
+      </form>
+  </div>
+  <table class="table table-striped" [mfData]="listaAsistencia" #mf="mfDataTable" [mfRowsOnPage]="5">
+    <thead>
+    <tr>
+      <th style="width: 30%">
+      <mfDefaultSorter by="usuario">Usuario</mfDefaultSorter>
+    </th>
+    <th style="width: 35%">
+      <mfDefaultSorter by="nombreOrg">Nombre de Organizacion</mfDefaultSorter>
+    </th>
+    <th style="width: 15%">
+      <mfDefaultSorter by="solicitarConst">Constancia</mfDefaultSorter>
+    </th>
+    <th style="width: 20%">
+      <mfDefaultSorter by="nombreOrg">Acciones</mfDefaultSorter>
+    </th>
+    </tr>
+    </thead>
+    <tbody>
+     <tr *ngFor="let item of listaAsistencia">
+      <td>{{item.usuario}}</td>
+      <td>{{item.nombreOrg | uppercase}}</td>
+      <td >{{item.solicitarConst}}</td>
+      <td>
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.open(contenido)" (click)="elegirAsis(item)" >Modificar</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="eliminarAs(item)" >Eliminar</button>
+      </td>
+     </tr>
+    </tbody>
+    <tfoot>
+     <tr>
+      <td colspan="4">
+       <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+      </td>
+     </tr>
+    </tfoot>
+</table>
+<ng-template #contenido let-modal>
+  <div class="modal-header">
+      <h4>Modificar</h4>
+     
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="inputEmail">Email</label>
+      <input type="email" class="form-control" id="inputEmailModel" placeholder="Email" name="UsuarioModel" required pattern=" [a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" [(ngModel)]="asis.usuario">
+      <div *ngIf="NombreOrgModel.invalid && (NombreOrgModel.dirty || NombreOrgModel.touched)" class="alert alert-info">
+        <div *ngIf="NombreOrgModel.errors.required">
+            Email es requerido
+        </div>
+        <div *ngIf="NombreOrgModel.errors.patern">
+            Ejemplo@sdsa.com
+        </div>
+    </div>
+    </div>
+    <div class="form-group">
+      <label for="formInput">Nombre Organizacion</label>
+      <input type="text" class="form-control" id="formInputModel" #NombreOrgModel="ngModel" required minlength="3" placeholder="Nombre de la Organizacion" name="NombreOrgModel" [(ngModel)]="asis.nombreOrg">
+      <div *ngIf="NombreOrgModel.invalid && (NombreOrgModel.dirty || NombreOrgModel.touched)" class="alert alert-info">
+        <div *ngIf="NombreOrgModel.errors.required">
+            Nombre de la Organizacion es requerido
+        </div>
+        <div *ngIf="NombreOrgModel.errors.minlength">
+            el dni requiere como minimo 3 digitos
+        </div>
+    </div>
+    </div>
+  <fieldset class="form-group">
+    <div class="row">
+      <legend class="col-form-label col-md-5 col-sm-2 pt-0">Solicitar Constancia: </legend>
+      <div class=" col-md-7 col-sm-10">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gridRadiosModel" id="gridRadios1Model" value="true" checked [(ngModel)]="asis.solicitarConst">
+          <label class="form-check-label" for="gridRadios1Model">
+            Si
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gridRadiosModel" id="gridRadios2Model" value="false" [(ngModel)]="asis.solicitarConst">
+          <label class="form-check-label" for="gridRadios2Model">
+            No
+          </label>
+        </div>
+
+      </div>
+    </div>
+  </fieldset>
+
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-outline-success"  (click)="modificarAsis()" (click)="modal.close()">Guardar Cambios</button>
+      <button type="button" class="btn btn-outline-danger" (click)="modal.close();limIn()">Cancelar</button>
+  </div>
+</ng-template>
+  

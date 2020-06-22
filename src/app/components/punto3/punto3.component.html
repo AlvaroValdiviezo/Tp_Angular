@@ -1,0 +1,215 @@
+<form class="was-validated">
+  
+    <div class="mb-3">
+      <div class="input-group is-invalid">
+        <input type="number" class="form-control is-invalid"  name="iddnipasajero" id="iddnipasajero" required  minlength="7"  placeholder="Ingrese DNI" #iddnipasajero="ngModel" aria-describedby="validatedInputGroupPrepend" [(ngModel)]="psj.dniPasajero">
+        <div *ngIf="iddnipasajero.invalid && (iddnipasajero.dirty || iddnipasajero.touched)" class="alert alert-info">
+          <div *ngIf="iddnipasajero.errors.required">
+              Dni es un campo requerido
+          </div>
+          <div *ngIf="iddnipasajero.errors.minlength">
+              el dni requiere como minimo 7 digitos
+          </div>
+      </div>
+      </div>
+      
+    </div>
+
+    <div class="mb-3">
+        <div class="input-group is-invalid"> 
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="validatedInputGroupSelect">Seleccionar Lugar</label>
+          </div>
+          <select class="custom-select" id="validatedInputGroupSelect" name="precioPasaje" required [(ngModel)]="psj.precioPasaje" >
+            <option value="0">Seleccione una Opcion</option>
+            <option value="1324">Humahuaca ---> 1324 $</option>
+            <option value="3223">San Pedro---> 3223 $</option>
+            <option value="4342">La Quiaca---> 4342 $</option>
+          </select>
+        </div>
+        
+      </div>
+  
+    <div class="mb-3">
+      <div class="input-group is-invalid">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="validatedInputGroupSelect">Seleccionar Clase de Pasajero</label>
+        </div>
+        <select class="custom-select" id="validatedInputGroupSelect" name="Categoria" required [(ngModel)]="psj.categoriaPasajero" (change)="calcularTotal()">
+          <option value="">Seleccione una Opcion</option>
+          <option value="m">Menor</option>
+          <option value="j">Jubilado</option>
+          <option value="a">Adulto</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="precio" *ngIf="mostrar">Precio: {{precioTot}} </label>
+          </div>
+    </div>
+  
+    <div class="input-group is-invalid">
+      <div>
+         <button class="btn btn-outline-secondary" type="button" (click)="registrarPasaje()">Registrar</button>
+      </div>
+    </div>
+  </form>
+
+  <table class="table table-striped" [mfData]="registroPasajes" #mf="mfDataTable" [mfRowsOnPage]="5">
+    <thead>
+    <tr>
+      <th style="width: 15%">
+      <mfDefaultSorter by="de">DNI</mfDefaultSorter>
+    </th>
+    <th style="width: 15%">
+      <mfDefaultSorter by="para">Precio</mfDefaultSorter>
+    </th>
+    <th style="width: 30%">
+      <mfDefaultSorter by="texto">Categoria</mfDefaultSorter>
+    </th>
+    <th style="width: 20%">
+      <mfDefaultSorter by="fecha">Fecha</mfDefaultSorter>
+    </th>
+    <th style="width: 30%">
+      <mfDefaultSorter by="fecha">Acciones</mfDefaultSorter>
+    </th>
+    </tr>
+    </thead>
+    <tbody>
+     <tr *ngFor="let item of mf.data">
+      <td>{{item['dniPasajero']}}</td>
+      <td>{{item['precioPasaje']}}</td>
+      <td >{{item['categoriaPasajero']}}</td>
+      <td>{{item['fechaCompra'] | date:'dd/MM/yyyy'}}</td>
+      <td>
+        <button class="btn btn-outline-info" [disabled]="!psj.habilitar" (click)="elegirPasaje(item);modal.open(adelan)">Agregar Adelanto</button>
+        <button class="btn btn-outline-primary" (click)="elegirPasaje(item);modal.open(modificar)">Modificar</button>
+        <button class="btn btn-outline-danger" (click)="eliminarPasaje(item)">Eliminar</button>
+        <button class="btn btn-outline-secondary" (click)="elegirPasaje(item)" (click)="band=true">Mostrar Adelantos</button>
+      </td>
+     </tr>
+    </tbody>
+    <tfoot>
+     <tr>
+      <td colspan="4">
+       <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+      </td>
+     </tr>
+    </tfoot>
+</table>
+
+<table class="table table-striped" [mfData]="psj.adelantos" #mf="mfDataTable" [mfRowsOnPage]="5" *ngIf="band">
+  <thead>
+  <tr>
+    <th style="width: 15%">
+    <mfDefaultSorter by="de">Cobrador</mfDefaultSorter>
+  </th>
+  <th style="width: 15%">
+    <mfDefaultSorter by="para">Monto</mfDefaultSorter>
+  </th>
+  <th style="width: 30%">
+    <mfDefaultSorter by="texto">Fecha</mfDefaultSorter>
+  </th>
+  <th style="width: 40%">
+    <mfDefaultSorter by="fecha">Acciones</mfDefaultSorter>
+  </th>
+ 
+  </thead>
+  <tbody>
+   <tr *ngFor="let item of mf.data">
+    <td>{{item.cobrador}}</td>
+    <td>{{item.montoAdelanto}}</td>
+    <td>{{item.fecha | date:'dd/MM/yyyy'}}</td>
+    <td>
+      <button class="btn btn-outline-danger" (click)="borrarAdelanto(item._id)">Eliminar</button>
+    </td>
+   </tr>
+  </tbody>
+  <tfoot>
+   <tr>
+    <td colspan="4">
+     <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+    </td>
+   </tr>
+  </tfoot>
+</table>
+
+<ng-template #modificar let-modal>
+  <div class="modal-header">
+      <h4>Mensaje Enviado ...</h4>
+     
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <div class="input-group is-invalid">
+        <input type="number" class="form-control is-invalid" name="dni" placeholder="Ingrese DNI" aria-describedby="validatedInputGroupPrepend" required [(ngModel)]="psj.dniPasajero">
+      </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="input-group is-invalid"> 
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="validatedInputGroupSelect">Seleccionar Lugar</label>
+          </div>
+          <select class="custom-select" id="validatedInputGroupSelect" name="precioPasaje" required [(ngModel)]="psj.precioPasaje">
+            <option value="0">Seleccione una Opcion</option>
+            <option value="1324">Humahuaca ---> 1324 $</option>
+            <option value="3223">San Pedro---> 3223 $</option>
+            <option value="4342">La Quiaca---> 4342 $</option>
+          </select>
+        </div>
+        
+      </div>
+  
+    <div class="mb-3">
+      <div class="input-group is-invalid">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="validatedInputGroupSelect">Seleccionar Clase de Pasajero</label>
+        </div>
+        <select class="custom-select" id="validatedInputGroupSelect" name="Categoria" required [(ngModel)]="psj.categoriaPasajero" (change)="calcularTotal()">
+          <option value="">Seleccione una Opcion</option>
+          <option value="m">Menor</option>
+          <option value="j">Jubilado</option>
+          <option value="a">Adulto</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="precio" *ngIf="mostrar">Precio: {{precioTot}} </label>
+          </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-outline-success"  (click)="modificarPasaje()" (click)="modal.close()">Enviar</button>
+      <button type="button" class="btn btn-outline-success" (click)="modal.close()">Cancelar</button>
+  </div>
+</ng-template>
+
+
+<ng-template #adelan let-modal>
+  <div class="modal-header">
+      <h4>Agregar Adelanto</h4>
+     
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <div class="input-group is-invalid">
+        <input type="text" class="form-control is-invalid" name="cob" placeholder="Cobrador" aria-describedby="validatedInputGroupPrepend" required [(ngModel)]="adelanto.cobrador">
+      </div>
+      <div class="mb-3">
+        <div class="input-group is-invalid">
+          <input type="number" class="form-control is-invalid" name="monto" placeholder="Monto de Adelanto" aria-describedby="validatedInputGroupPrepend" required [(ngModel)]="adelanto.montoAdelanto">
+        </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="modal-footer">
+      <button type="button" class="btn btn-outline-success"  (click)="agregarAdelanto()" (click)="modal.close()">Enviar</button>
+      <button type="button" class="btn btn-outline-success" (click)="modal.close()">Cancelar</button>
+  </div>
+</ng-template>

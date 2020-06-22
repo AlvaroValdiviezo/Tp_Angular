@@ -1,0 +1,122 @@
+<div class="row ">
+    <div class=" col-md-12">
+        <form class="card">
+          <div class="card-header"> Envio de Mensajes-</div>
+            <div class="card-body">
+              <div class="row form-group">
+                <label class="col-sm-12 col-md-4">Para</label>
+                <input class="form-control col-sm-12 col-md-8" type="number" required #desde="ngModel" minlength="10" maxlength="10" name="txtdesde" [(ngModel)]="msj.para" />
+                <div *ngIf="desde.invalid && (desde.dirty || desde.touched)" class="alert alert-info">
+                  <div *ngIf="desde.errors.required">
+                      Este Campo es requerido
+                  </div>
+                  <div *ngIf="desde.errors.minlength">
+                      el numero requiere como minimo 10 digitos
+                  </div>
+                  <div *ngIf="desde.errors.maxlength">
+                    el numero no puede tener mas de 10 digitos
+                </div>
+              </div>
+              </div>
+              <div class="mb-3">
+                <label for="idEmpresa" class="col-md-4">Empresa</label>
+                <select class="custom-select col-md-8" name="empre" [(ngModel)]="msj.empresa" #empresa="ngModel" required>
+                  <option aria-selected="true">Seleccion...</option>
+                  <option *ngFor="let men of listadoEmpresas" [ngValue]="men">{{men.nombre}}</option>
+                  <div *ngIf="empresa.invalid && (empresa.dirty || empresa.touched)" class="alert alert-info">
+                    <div *ngIf="empresa.errors.required">
+                        Este Campo es requerido
+                    </div>
+                </div>
+                </select>
+              </div>
+            <div class="row form-group">
+              <label class="col-sm-12 col-md-4" >Desde</label>
+              <input class="form-control col-sm-12 col-md-8" type="number" #hasta="ngModel" required minlength="10" maxlength="10" name="txthasta" [(ngModel)]="msj.desde" />
+              <div *ngIf="desde.invalid && (desde.dirty || desde.touched)" class="alert alert-info">
+                <div *ngIf="desde.errors.required">
+                    Este Campo es requerido
+                </div>
+                <div *ngIf="desde.errors.minlength">
+                    el numero requiere como minimo 10 digitos
+                </div>
+                <div *ngIf="desde.errors.maxlength">
+                  el numero no puede tener mas de 10 digitos
+              </div>
+            </div>
+            </div>
+            <label>Longitud de Texto Escrito: {{textTam}} </label>
+            <div class="row form-group">
+              <textarea class="form-control" [maxlength]="tamTextMax" #mensaje="ngModel" required minlength="1" rows="5" name="txtTexto" [(ngModel)]="msj.texto" (ngModelChange)="cambiarTamTexto()">  
+              </textarea>
+              <div *ngIf="mensaje.invalid && (mensaje.dirty || mensaje.touched)" class="alert alert-info">
+                <div *ngIf="mensaje.errors.required">
+                    Este Campo es requerido
+                </div>
+                <div *ngIf="mensaje.errors.minlength">
+                    por lo menos debe de ingresar una letra
+                </div>
+                
+            </div>
+            </div>
+            <div class="row form-group">
+              <button type="button" class="btn btn-outline-secondary" (click)="modal.open(contenido)" >Enviar</button>
+              <button type="button" class="btn btn-outline-secondary" (click)="limpiarMensaje()">Limpiar</button>            
+            </div>
+          </div>
+        </form>
+    </div>
+<table class="table table-striped" [mfData]="listadoMensajes" #mf="mfDataTable" [mfRowsOnPage]="5">
+    <thead>
+    <tr>
+      <th style="width: 15%">
+      <mfDefaultSorter by="de">De</mfDefaultSorter>
+    </th>
+    <th style="width: 15%">
+      <mfDefaultSorter by="para">Para</mfDefaultSorter>
+    </th>
+    <th style="width: 15%">
+      <mfDefaultSorter by="empresa">Empresa</mfDefaultSorter>
+    </th>
+    <th style="width: 35%">
+      <mfDefaultSorter by="texto">Mensaje</mfDefaultSorter>
+    </th>
+    <th style="width: 30%">
+      <mfDefaultSorter by="fecha">Fecha</mfDefaultSorter>
+    </th>
+    </tr>
+    </thead>
+    <tbody>
+     <tr *ngFor="let item of listadoMensajes">
+      <td>{{item.desde}}</td>
+      <td>{{item.para}}</td>
+      <td>{{item.empresa.nombre}}</td>
+      <td >{{item.texto}}</td>
+      <td>{{item.fecha}}</td>
+     </tr>
+    </tbody>
+    <tfoot>
+     <tr>
+      <td colspan="4">
+       <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+      </td>
+     </tr>
+    </tfoot>
+</table>
+
+<ng-template #contenido let-modal>
+    <div class="modal-header">
+        <h4>Mensaje Enviado ...</h4>
+       
+    </div>
+    <div class="modal-body">
+        <p>Para: {{msj.para}}</p>
+        <p>Empresa: {{msj.empresa.nombre}}</p>
+        <p>Desde: {{msj.desde}}</p>
+        <p>Texto: {{msj.texto}}</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success"  (click)="enviarMensaje()" (click)="modal.close()">Enviar</button>
+        <button type="button" class="btn btn-outline-success" (click)="modal.close()">Cancelar</button>
+    </div>
+</ng-template>
